@@ -190,10 +190,24 @@ export class BaseOperate {
     }
   }
 
-  emitShouldStartLoadWithRequest(event: OnLoadInterceptEvent) {
+  verifyURLFormat(url: string, html: string | undefined, baseUrl: string | undefined) {
+    const dataUrlPattern = /^data:text\/html;/;
+    if (dataUrlPattern.test(url)){
+      if (html != undefined && html != "") {
+        if (baseUrl != undefined && baseUrl != "") {
+          url = baseUrl.toLowerCase();
+        } else {
+          url = 'about:blank';
+        }
+      }
+    }
+    return url;
+  }
+
+  emitShouldStartLoadWithRequest(event: OnLoadInterceptEvent, html: string | undefined, baseUrl: string | undefined) {
     try {
       this.eventEmitter!.emit('shouldStartLoadWithRequest', {
-        url: event.data.getRequestUrl(),
+        url: this.verifyURLFormat(event.data.getRequestUrl(), html, baseUrl),
         loading: false,
         title: this.controller.getTitle(),
         canGoBack: this.controller.accessBackward(),

@@ -403,7 +403,7 @@ export struct RNCWebView {
     const params = new ShouldStartParams();
     params.lockIdentifier = this.webViewBaseOperate?.getLockIdentifier() || -1
     this.ctx.runOnWorkerThread(new WorkerRunnable(), params);
-    this.webViewBaseOperate?.emitShouldStartLoadWithRequest(event)
+    this.webViewBaseOperate?.emitShouldStartLoadWithRequest(event, this.source.html, this.source.baseUrl)
     const startTime = Date.now();
     // 当lockState没变化并且小于超时时间，阻塞进程
     while (params.lockState === ShouldOverrideCallbackState.UNDECIDED &&
